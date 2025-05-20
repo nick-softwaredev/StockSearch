@@ -9,7 +9,7 @@ import SwiftUI
 
 @MainActor
 final class StockSearchViewModel: ObservableObject {
-    enum ViewState {
+    enum ViewState: Equatable {
         case idle
         case loading
         case loadedWithResult
@@ -17,7 +17,7 @@ final class StockSearchViewModel: ObservableObject {
         case loadedWithError(message: String)
     }
 
-    private(set) var searchResult: [Stock] = []
+    @Published private(set) var searchResult: [Stock] = []
     @Published var viewState: ViewState = .idle
     @Published var searchText: String = ""
 
@@ -48,12 +48,12 @@ final class StockSearchViewModel: ObservableObject {
         searchTask?.cancel()
 
         searchTask = Task {
-            guard !Task.isCancelled else { return }
+            guard !Task.isCancelled else { return } // Prevent earlier cancelled task from running
 
             viewState = .loading
             let result = await searchUseCase.searchForStockTicker(query: query)
 
-            guard !Task.isCancelled else { return }
+            guard !Task.isCancelled else { return } // Verify if  still alive, only then update
 
             switch result {
             case .success(let searchResult):
@@ -64,5 +64,9 @@ final class StockSearchViewModel: ObservableObject {
                 self.searchResult = []
             }
         }
+    }
+    
+    deinit {
+        searchTask?.cancel()
     }
 }
