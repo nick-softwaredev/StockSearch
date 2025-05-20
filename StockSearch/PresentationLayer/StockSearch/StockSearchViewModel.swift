@@ -6,8 +6,8 @@
 //
 
 import SwiftUI
+import Resolver
 
-@MainActor
 final class StockSearchViewModel: ObservableObject {
     enum ViewState: Equatable {
         case idle
@@ -23,13 +23,8 @@ final class StockSearchViewModel: ObservableObject {
 
     private var searchTask: Task<Void, Never>?
 
-    private let searchUseCase: StockSearchUseCaseProtocol
-    private let debouncer: DebouncerProtocol
-
-    init(searchUseCase: StockSearchUseCaseProtocol, debouncer: DebouncerProtocol) {
-        self.searchUseCase = searchUseCase
-        self.debouncer = debouncer
-    }
+    @Injected private var searchUseCase: StockSearchUseCaseProtocol
+    @Injected private var debouncer: DebouncerProtocol
 
     func onSearchTextChanged(_ query: String) async {
         print("did receive input for \(query)")
@@ -44,6 +39,7 @@ final class StockSearchViewModel: ObservableObject {
          }
      }
 
+    @MainActor
     func search(query: String) async {
         searchTask?.cancel()
 
