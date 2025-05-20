@@ -1,0 +1,68 @@
+//
+//  StockSearchViewModel.swift
+//  StockSearch
+//
+//  Created by Nick Nick  on 5/20/25.
+//
+
+import SwiftUI
+
+@MainActor
+final class StockSearchViewModel: ObservableObject {
+    enum ViewState {
+        case idle
+        case loading
+        case loadedWithResult
+        case loadedWithNoResult(query: String)
+        case loadedWithError(message: String)
+    }
+
+    private(set) var searchResult: [Stock] = []
+    @Published var viewState: ViewState = .idle
+    @Published var searchText: String = ""
+
+    private var searchTask: Task<Void, Never>?
+
+    private let searchUseCase: StockSearchUseCaseProtocol
+    private let debouncer: DebouncerProtocol
+
+    init(searchUseCase: StockSearchUseCaseProtocol, debouncer: DebouncerProtocol) {
+        self.searchUseCase = searchUseCase
+        self.debouncer = debouncer
+    }
+
+    func onSearchTextChanged(_ query: String) async {
+        print("did receive input for \(query)")
+        if query.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            self.searchResult = []
+            viewState = .idle
+            return
+        }
+
+        await debouncer.debounce {
+             await self.search(query: query)
+         }
+     }
+
+    func search(query: String) async {
+        searchTask?.cancel()
+
+        searchTask = Task {
+            guard !Task.isCancelled else { return }
+
+            viewState = .loading
+            let result = await searchUseCase.searchForStockTicker(query: query)
+
+            guard !Task.isCancelled else { return }
+
+            switch result {
+            case .success(let searchResult):
+                viewState = searchResult.isEmpty ? .loadedWithNoResult(query: query) : .loadedWithResult
+                self.searchResult = searchResult
+            case .failure(let failure):
+                viewState = .loadedWithError(message: failure.userMessage)
+                self.searchResult = []
+            }
+        }
+    }
+}
