@@ -22,8 +22,13 @@ struct StockSearchViewListOverlay: View {
             case .loadedWithNoResult(let query):
                 Text("No results for '\(query)'")
                     .animation(.easeIn, value: query)
-            case .loadedWithError(let message):
-                Text(message)
+            case .loadedWithError(let message, let suggestion):
+                VStack {
+                    Text(message)
+                    Text(suggestion)
+                        .font(.body)
+                }
+                .padding()
             }
         }
     }

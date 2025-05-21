@@ -7,21 +7,25 @@
 
 @testable import StockSearch
 
-final class MockSuccessStockSearchUseCase: StockSearchUseCaseProtocol {
+struct MockSuccessStockSearchUseCase: StockSearchUseCaseProtocol {
+    let expectedResult: [Stock]
+    
+    init(expectedResult: [Stock]) {
+        self.expectedResult = expectedResult
+    }
+    
     func searchForStockTicker(query: String) async -> Result<[Stock], StockSearchUseCaseError> {
-        return .success([
-            Stock(id: 1, name: "Apple Inc.", ticker: "AAPL", averagePrice: 190.2)
-        ])
+        return .success(expectedResult)
     }
 }
 
-final class MockEmptyStockSearchUseCase: StockSearchUseCaseProtocol {
+struct MockEmptyStockSearchUseCase: StockSearchUseCaseProtocol {
     func searchForStockTicker(query: String) async -> Result<[Stock], StockSearchUseCaseError> {
         return .success([])
     }
 }
 
-final class MockFailureStockSearchUseCase: StockSearchUseCaseProtocol {
+struct MockFailureStockSearchUseCase: StockSearchUseCaseProtocol {
     func searchForStockTicker(query: String) async -> Result<[Stock], StockSearchUseCaseError> {
         return .failure(.network)
     }

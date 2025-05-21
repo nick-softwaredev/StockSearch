@@ -14,7 +14,11 @@ protocol StockSearchUseCaseProtocol {
 
 enum StockSearchUseCaseError: LocalizedError {
     case network
+    case decoding
+    case system
+    case unknown
     
+    // message communicated to user is the same for any of the errors
     var errorDescription: String {
         return "Search failed"
     }
@@ -41,10 +45,18 @@ struct StockSearchUseCase: StockSearchUseCaseProtocol {
                     .prefix(10)
             )
             return .success(searchResult)
-        } catch let error {
-            // in real word, here i can also log analytics or any other business logic
-            print(error)
+        } catch let error as URLError {
+            print("URLError: \(error)")
             return .failure(.network)
+        } catch let error as DecodingError {
+            print("DecodingError: \(error)")
+            return .failure(.decoding)
+        } catch let error as NSError where error.domain == NSCocoaErrorDomain {
+            print("NSCocoaErrorDomain error: \(error)")
+            return .failure(.system)
+        } catch {
+            print("Unknown error: \(error)")
+            return .failure(.unknown)
         }
     }
 }

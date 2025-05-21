@@ -12,13 +12,17 @@ import Testing
 struct StockSearchUseCaseTests {
     @Test("Returns result with one stock on successful query")
     func testSuccessSearchReturnsStock() async {
-        let useCase = MockSuccessStockSearchUseCase()
+        let expectedResult = ([
+            Stock(id: 1, name: "Apple Inc.", ticker: "AAPL", averagePrice: 190.2)
+        ])
+        
+        let useCase = MockSuccessStockSearchUseCase(expectedResult: expectedResult)
         let result = await useCase.searchForStockTicker(query: "AAPL")
 
         switch result {
         case .success(let stocks):
-            #expect(stocks.count == 1, "Expected one stock in result")
-            #expect(stocks.first?.ticker == "AAPL", "Expected ticker to be AAPL")
+            #expect(stocks.count == expectedResult.count, "Expected one stock in result")
+            #expect(stocks.first?.ticker == expectedResult.first?.ticker, "Expected ticker to be AAPL")
         case .failure:
             #expect(Bool(false), "Expected success, got failure")
         }

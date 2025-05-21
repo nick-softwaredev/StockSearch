@@ -11,9 +11,13 @@ struct StockSearchView: View {
     @StateObject var viewModel: StockSearchViewModel
 
     var body: some View {
-        ZStack {
-            StockSearchViewList(stocks: viewModel.searchResult)
-            StockSearchViewListOverlay(viewState: viewModel.viewState)
+        VStack {
+            switch viewModel.viewState {
+            case .loadedWithResult(let searchResult):
+                StockSearchViewList(stocks: searchResult)
+            default:
+                StockSearchViewListOverlay(viewState: viewModel.viewState)
+            }
         }
         .navigationTitle("Search Stocks")
         .searchable(text: $viewModel.searchText, prompt: "Search by name or ticker")

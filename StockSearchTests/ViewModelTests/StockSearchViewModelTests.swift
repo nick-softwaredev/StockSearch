@@ -11,39 +11,44 @@ import Testing
 @Suite
 struct StockSearchViewModelTests {
     
-    @Test("ViewModel enters idle state when input query is empty or whitespace")
+    @MainActor @Test("ViewModel enters idle state when input query is empty or whitespace")
     func idleStateOnEmptyQuery() async {
         let vm = await MainActor.run {
             StockSearchViewModel(
-                searchUseCase: MockSuccessStockSearchUseCase(),
+                searchUseCase: MockEmptyStockSearchUseCase(),
                 debouncer: InstantDebouncerMock()
             )
         }
         
         await vm.onSearchTextChanged("   ")
         
-        await #expect(vm.viewState == .idle, "Expected viewState to be .idle for empty query")
-        await #expect(vm.searchResult.isEmpty, "Expected no results for empty query")
+        #expect(vm.viewState == .idle, "Expected viewState to be .idle for empty query")
     }
     
-    @Test("ViewModel sets state to .loadedWithResult and updates results on successful search")
-    @MainActor
+    @MainActor @Test("ViewModel sets state to .loadedWithResult and updates results on successful search")
     func successfulSearchSetsLoadedWithResult() async {
+        let expectedResult = ([
+            Stock(id: 1, name: "Apple Inc.", ticker: "AAPL", averagePrice: 190.2)
+        ])
+        
         let vm =
         StockSearchViewModel(
-            searchUseCase: MockSuccessStockSearchUseCase(),
+            searchUseCase: MockSuccessStockSearchUseCase(expectedResult: expectedResult),
             debouncer: InstantDebouncerMock()
         )
         
         
         await vm.onSearchTextChanged("AAPL")
         
-        #expect(vm.viewState == .loadedWithResult, "Expected .loadedWithResult state")
-        #expect(vm.searchResult.count == 1, "Expected one result")
-        #expect(vm.searchResult.first?.ticker == "AAPL", "Expected result ticker to be AAPL")
+        if case .loadedWithResult(let result) = vm.viewState {
+            #expect(result.count == expectedResult.count, "Expected one result")
+            #expect(result.first?.ticker == expectedResult.first?.ticker, "Expected result ticker to be AAPL")
+        } else {
+            #expect(Bool(false), "Expected .loadedWithResult state")
+        }
     }
     
-    @Test("ViewModel sets state to .loadedWithNoResult for valid query that returns no matches")
+    @MainActor @Test("ViewModel sets state to .loadedWithNoResult for valid query that returns no matches")
     func emptySearchSetsLoadedWithNoResult() async {
         let vm = await MainActor.run {
             StockSearchViewModel(
@@ -54,15 +59,14 @@ struct StockSearchViewModelTests {
         
         await vm.onSearchTextChanged("XYZ")
         
-        guard case let .loadedWithNoResult(query) = await vm.viewState else {
+        guard case let .loadedWithNoResult(query) = vm.viewState else {
             return #expect(Bool(false), "Expected viewState to be .loadedWithNoResult")
         }
         
         #expect(query == "XYZ", "Expected query to be carried into state")
-        await #expect(vm.searchResult.isEmpty, "Expected empty result list")
     }
     
-    @Test("ViewModel sets state to .loadedWithError when search use case fails")
+    @MainActor @Test("ViewModel sets state to .loadedWithError when search use case fails")
     func failureSetsLoadedWithError() async {
         let vm = await MainActor.run {
             StockSearchViewModel(
@@ -73,11 +77,10 @@ struct StockSearchViewModelTests {
         
         await vm.onSearchTextChanged("AAPL")
         
-        guard case let .loadedWithError(message) = await vm.viewState else {
+        guard case let .loadedWithError(message) = vm.viewState else {
             return #expect(Bool(false), "Expected viewState to be .loadedWithError")
         }
         
-        //#expect(message == "Network error", "Expected correct error message")
-        await #expect(vm.searchResult.isEmpty, "Expected no search results on failure")
+        #expect(message == "Search failed", "Expected correct error message")
     }
 }
