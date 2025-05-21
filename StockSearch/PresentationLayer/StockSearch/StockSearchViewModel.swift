@@ -31,6 +31,7 @@ final class StockSearchViewModel: ObservableObject {
         self.debouncer = debouncer
     }
 
+    @MainActor
     func onSearchTextChanged(_ query: String) async {
         print("did receive input for \(query)")
         if query.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
