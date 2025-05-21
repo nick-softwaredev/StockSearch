@@ -13,18 +13,29 @@ protocol StockSearchUseCaseProtocol {
 }
 
 enum StockSearchUseCaseError: LocalizedError {
+    case cancelled
     case network
     case decoding
     case system
     case unknown
     
-    // message communicated to user is the same for any of the errors
     var errorDescription: String {
         return "Search failed"
     }
     
     var recoverySuggestion: String {
-        return "Please, try again"
+        switch self {
+        case .network:
+            return "Check your internet connection."
+        case .decoding:
+            return "Data format error. Try again later."
+        case .system:
+            return "Unexpected system error. Try again later."
+        case .unknown:
+            return "Something went wrong. Please try again."
+        case .cancelled:
+            return "Cancelled"
+        }
     }
 }
 
@@ -45,6 +56,9 @@ struct StockSearchUseCase: StockSearchUseCaseProtocol {
                     .prefix(10)
             )
             return .success(searchResult)
+        } catch let error as URLError where error.code == .cancelled {
+            print("Request cancelled:")
+            return .failure(.cancelled)
         } catch let error as URLError {
             print("URLError: \(error)")
             return .failure(.network)

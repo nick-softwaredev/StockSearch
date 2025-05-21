@@ -49,6 +49,10 @@ final class StockSearchViewModel: ObservableObject {
         case .success(let searchResult):
             viewState = searchResult.isEmpty ? .loadedWithNoResult(query: query) : .loadedWithResult(searchResult)
         case .failure(let failure):
+            if failure == .cancelled {
+                return
+            }
+            
             viewState = .loadedWithError(description: failure.errorDescription, message: failure.recoverySuggestion)
         }
     }

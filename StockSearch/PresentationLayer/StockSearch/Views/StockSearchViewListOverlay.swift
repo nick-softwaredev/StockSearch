@@ -23,11 +23,22 @@ struct StockSearchViewListOverlay: View {
                 Text("No results for '\(query)'")
                     .animation(.easeIn, value: query)
             case .loadedWithError(let message, let suggestion):
-                VStack {
+                VStack(spacing: 8) {
+                    Image(systemName: "exclamationmark.triangle.fill")
+                        .font(.system(size: 32))
+                        .foregroundColor(.orange)
+                    
                     Text(message)
+                        .font(.headline)
+                        .multilineTextAlignment(.center)
+                        .foregroundColor(.primary)
+
                     Text(suggestion)
-                        .font(.body)
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
+                        .multilineTextAlignment(.center)
                 }
+                .padding()
                 .padding()
             }
         }
