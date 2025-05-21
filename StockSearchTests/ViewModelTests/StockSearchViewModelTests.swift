@@ -83,7 +83,7 @@ struct StockSearchViewModelTests {
         
         await vm.onSearchTextChanged("AAPL")
         
-        guard case let .loadedWithError(description, recoverySuggestion) = vm.viewState else {
+        guard case let .loadedWithError(description, _) = vm.viewState else {
             return #expect(Bool(false), "Expected viewState to be .loadedWithError")
         }
         
