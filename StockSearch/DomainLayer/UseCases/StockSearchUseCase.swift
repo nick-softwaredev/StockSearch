@@ -9,7 +9,7 @@
 import Foundation
 
 protocol StockSearchUseCaseProtocol {
-    func searchForStockTicker(query: String) async -> Result<[Stock], StockSearchUseCaseError>
+    func searchForStockTicker(query: String, resultLimit: Int) async -> Result<[Stock], StockSearchUseCaseError>
 }
 
 enum StockSearchUseCaseError: LocalizedError {
@@ -41,8 +41,8 @@ enum StockSearchUseCaseError: LocalizedError {
 
 struct StockSearchUseCase: StockSearchUseCaseProtocol {
     let repository: StockSearchRepositoryProtocol
-
-    func searchForStockTicker(query: String) async -> Result<[Stock], StockSearchUseCaseError> {
+    
+    func searchForStockTicker(query: String, resultLimit: Int) async -> Result<[Stock], StockSearchUseCaseError> {
         guard !query.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
             return .success([])
         }
@@ -72,5 +72,15 @@ struct StockSearchUseCase: StockSearchUseCaseProtocol {
             print("Unknown error: \(error)")
             return .failure(.unknown)
         }
+    }
+    
+    /// this unction
+    private func searchStocksWith(query: String, mergedStockData: [Stock], resultLimit: Int = 10) -> [Stock] {
+        return Array(
+            mergedStockData
+                .lazy
+                .filter { ($0.name + " " + $0.ticker).lowercased().contains(query.lowercased()) }
+                .prefix(resultLimit)
+        )
     }
 }

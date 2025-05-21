@@ -14,19 +14,19 @@ struct MockSuccessStockSearchUseCase: StockSearchUseCaseProtocol {
         self.expectedResult = expectedResult
     }
     
-    func searchForStockTicker(query: String) async -> Result<[Stock], StockSearchUseCaseError> {
+    func searchForStockTicker(query: String, resultLimit: Int) async -> Result<[Stock], StockSearchUseCaseError> {
         return .success(expectedResult)
     }
 }
 
 struct MockEmptyStockSearchUseCase: StockSearchUseCaseProtocol {
-    func searchForStockTicker(query: String) async -> Result<[Stock], StockSearchUseCaseError> {
+    func searchForStockTicker(query: String, resultLimit: Int) async -> Result<[Stock], StockSearchUseCaseError> {
         return .success([])
     }
 }
 
 struct MockFailureStockSearchUseCase: StockSearchUseCaseProtocol {
-    func searchForStockTicker(query: String) async -> Result<[Stock], StockSearchUseCaseError> {
+    func searchForStockTicker(query: String, resultLimit: Int) async -> Result<[Stock], StockSearchUseCaseError> {
         return .failure(.network)
     }
 }

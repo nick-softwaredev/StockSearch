@@ -44,7 +44,7 @@ final class StockSearchViewModel: ObservableObject {
         }
         
         viewState = .loading
-        let result = await searchUseCase.searchForStockTicker(query: query)
+        let result = await searchUseCase.searchForStockTicker(query: query, resultLimit: 10)
         
         switch result {
         case .success(let searchResult):
