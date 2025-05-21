@@ -58,17 +58,31 @@ struct StockSearchViewRow: View {
     let stock: Stock
     var body: some View {
         HStack {
-            VStack(alignment: .leading) {
+            VStack(alignment: .leading, spacing: 4) {
                 Text(stock.ticker)
                     .font(.headline)
+                    .foregroundColor(.primary)
+
                 Text(stock.name)
                     .font(.subheadline)
-                    .foregroundStyle(.secondary)
+                    .foregroundColor(.secondary)
+                    .lineLimit(1)
+                    .truncationMode(.tail)
             }
+
             Spacer()
-            Text(stock.averagePrice, format: .currency(code: "USD"))
-                .font(.body)
+
+            VStack(alignment: .trailing, spacing: 4) {
+                Text(stock.currentPrice, format: .currency(code: "USD"))
+                    .font(.subheadline)
+                    .foregroundColor(.primary)
+
+                Text(stock.averagePrice, format: .currency(code: "USD"))
+                    .font(.footnote)
+                    .foregroundColor(.secondary)
+            }
         }
+        .padding(.vertical, 8)
     }
 }
 

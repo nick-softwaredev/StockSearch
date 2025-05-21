@@ -25,6 +25,7 @@ struct StockResponseMerger: StockResponseMergerProtocol {
                     id: first.id,
                     name: first.name,
                     ticker: ticker,
+                    currentPrice: first.currentPrice,
                     averagePrice: averagePrice
                 )
             } else {
