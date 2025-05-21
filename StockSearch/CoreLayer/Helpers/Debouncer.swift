@@ -39,11 +39,3 @@ actor Debouncer: DebouncerProtocol {
         task = nil
     }
 }
-
-
-actor InstantDebouncerMock: DebouncerProtocol {
-    func debounce(action: @escaping () async -> Void) async {
-        await action()
-    }
-    func cancel() { }
-}

@@ -23,8 +23,13 @@ final class StockSearchViewModel: ObservableObject {
 
     private var searchTask: Task<Void, Never>?
 
-    @Injected private var searchUseCase: StockSearchUseCaseProtocol
-    @Injected private var debouncer: DebouncerProtocol
+    private let searchUseCase: StockSearchUseCaseProtocol
+    private let debouncer: DebouncerProtocol
+    
+    init(searchUseCase: StockSearchUseCaseProtocol, debouncer: DebouncerProtocol) {
+        self.searchUseCase = searchUseCase
+        self.debouncer = debouncer
+    }
 
     func onSearchTextChanged(_ query: String) async {
         print("did receive input for \(query)")

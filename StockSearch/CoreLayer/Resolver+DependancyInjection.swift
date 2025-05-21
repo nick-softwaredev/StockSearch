@@ -7,19 +7,31 @@
 
 import Resolver
 
-extension Resolver: ResolverRegistering {
+extension Resolver: @retroactive ResolverRegistering {
   public static func registerAllServices() {
       register { Debouncer() as DebouncerProtocol }
           .scope(.unique)
       
-      register { MockStockSearchRepositorySuccess() as StockSearchRepositoryProtocol } // TODO: temp, replace with real thing
-          .scope(.unique)
+      register { StockAPIClient() as StockAPIClientProtocol }
+          .scope(.application)
+      
+      register { StockAPIClient() as StockAPIClientProtocol }
+          .scope(.application)
+      
+      register { StockRemoteDataService(sessionClient: resolve()) as StockRemoteDataServiceProtocol }
+          .scope(.application)
+      
+      register { StockResponseAdapter() as StockResponseAdapterProtocol }
+          .scope(.application)
+      
+      register { StockSearchRepository() as StockSearchRepositoryProtocol }
+          .scope(.application)
 
       register { StockSearchUseCase(repository: resolve()) as StockSearchUseCaseProtocol }
           .scope(.application)
 
       register {
-          StockSearchViewModel()
+          StockSearchViewModel(searchUseCase: resolve(), debouncer: resolve())
       }
       .scope(.unique)
   }
