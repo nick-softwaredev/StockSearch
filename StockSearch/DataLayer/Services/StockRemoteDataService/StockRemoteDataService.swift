@@ -6,13 +6,10 @@
 //
 
 import Foundation
+import Resolver
 
 struct StockRemoteDataService: StockRemoteDataServiceProtocol {
-    private let sessionClient: StockAPIClientProtocol
-
-    init(sessionClient: StockAPIClientProtocol) {
-        self.sessionClient = sessionClient
-    }
+    @Injected private var sessionClient: StockAPIClientProtocol
     
     func loadCurrentDataFor(query: String) async throws -> StockDataResponse {
         try await sessionClient.fetch(StockDataResponse.self, from: .current(query), timeoutInterval: 10)
