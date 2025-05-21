@@ -39,7 +39,7 @@ Given the are no sockets or dedicated backend api to perform search and get part
 
 ## Complexity  
 
-Merging of the data done with help of hash map (dictionary) to achieve proper performance. 
+Merging of the data done with help of zip to achieve proper performance, because the data structured for both apis in aligned way with same positions with only difference being the price value. 
 
 Searching done over name and ticker based on query and utilizes lazy array with cut off prefix to allow limited amount of values to be retrieved from the data and exit search early (inspired by iOS Stock app) and optimizing performance. Result sorting based on query lengths, with 2 or less characters ticker assumed being a priority. The performance is covered by unit tests. 
 

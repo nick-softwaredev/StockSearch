@@ -29,6 +29,37 @@ struct StockResponseMergerTests {
         #expect(result[1].name == "Tesla")
         #expect(result[1].averagePrice == 710)
     }
+    
+    @Test("Merges 1 million entries efficiently")
+    func mergesMillionEntriesEfficiently() {
+        let count = 1_000_000
+        
+        let currentStocks = (0..<count).map { i in
+            StockDataEntry(
+                id: i,
+                name: "Stock \(i)",
+                ticker: "T\(i)",
+                currentPrice: Double(i)
+            )
+        }
+        
+        let historicalStocks = (0..<count).map { i in
+            StockDataEntry(
+                id: i + count,
+                name: "Stock \(i)", // same name/ticker
+                ticker: "T\(i)",
+                currentPrice: Double(i + 10)
+            )
+        }
+        
+        let response = (current: StockDataResponse(stocks: currentStocks),
+                        historical: StockDataResponse(stocks: historicalStocks))
+        
+        
+        let merged = StockResponseMerger.merge(response: response)
+        
+        #expect(merged.count == count)
+    }
 
     @Test("Returns empty list for empty responses")
     func emptyResponsesReturnEmptyList() {
