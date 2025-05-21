@@ -38,7 +38,6 @@ struct StockSearchViewListOverlay: View {
                         .padding()
                 }
             }
-            
         }
     }
 }

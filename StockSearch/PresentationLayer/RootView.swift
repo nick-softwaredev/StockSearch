@@ -8,9 +8,20 @@
 import SwiftUI
 import Resolver
 
+@MainActor
+final class NavigationPathCoordinator: ObservableObject {
+    enum Path: Hashable {
+
+    }
+    @Published var path = NavigationPath()
+}
+
+
 struct RootView: View {
+    @StateObject var coordinator = NavigationPathCoordinator()
+    
     var body: some View {
-        NavigationStack {
+        NavigationStack(path: $coordinator.path) {
             StockSearchView(
                 viewModel: StockSearchViewModel(
                     searchUseCase: Resolver.resolve(),
@@ -20,9 +31,5 @@ struct RootView: View {
             )
         }
     }
-}
-
-#Preview {
-    RootView()
 }
 

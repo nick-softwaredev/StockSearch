@@ -36,6 +36,14 @@ struct StockSearchView: View {
     }
 }
 
+#Preview {
+    NavigationStack {
+        StockSearchView(
+            viewModel: StockSearchViewModel(searchUseCase: StockSearchUseCase(repository: StockSearchRepositoryProtocol_Preview()), debouncer: Debouncer(), networkMonitor: MockNetworkMonitorConnected())
+        )
+    }
+}
+
 struct StockSearchViewList: View {
     let stocks: [Stock]
     
@@ -56,30 +64,42 @@ struct StockSearchViewList: View {
 
 struct StockSearchViewRow: View {
     let stock: Stock
+    
     var body: some View {
-        HStack {
+        HStack(spacing: 12) {
             VStack(alignment: .leading, spacing: 4) {
                 Text(stock.ticker)
                     .font(.headline)
                     .foregroundColor(.primary)
-
                 Text(stock.name)
                     .font(.subheadline)
                     .foregroundColor(.secondary)
                     .lineLimit(1)
                     .truncationMode(.tail)
             }
-
+            
             Spacer()
-
-            VStack(alignment: .trailing, spacing: 4) {
-                Text(stock.currentPrice, format: .currency(code: "USD"))
-                    .font(.subheadline)
-                    .foregroundColor(.primary)
-
-                Text(stock.averagePrice, format: .currency(code: "USD"))
-                    .font(.footnote)
-                    .foregroundColor(.secondary)
+            
+            VStack(alignment: .trailing, spacing: 6) {
+                VStack(alignment: .trailing, spacing: 2) {
+                    Text("Current")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                    
+                    Text(stock.currentPrice, format: .currency(code: "USD"))
+                        .font(.subheadline)
+                        .foregroundColor(.primary)
+                }
+                
+                VStack(alignment: .trailing, spacing: 2) {
+                    Text("Average")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                    
+                    Text(stock.averagePrice, format: .currency(code: "USD"))
+                        .font(.footnote)
+                        .foregroundColor(.secondary)
+                }
             }
         }
         .padding(.vertical, 8)
