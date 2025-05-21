@@ -24,10 +24,13 @@ final class StockSearchViewModel: ObservableObject {
     
     private let searchUseCase: StockSearchUseCaseProtocol
     private let debouncer: DebouncerProtocol
+    private let networkMonitor: NetworkMonitoringProtocol
     
-    init(searchUseCase: StockSearchUseCaseProtocol, debouncer: DebouncerProtocol) {
+    init(searchUseCase: StockSearchUseCaseProtocol, debouncer: DebouncerProtocol, networkMonitor: NetworkMonitoringProtocol) {
         self.searchUseCase = searchUseCase
         self.debouncer = debouncer
+        self.networkMonitor = networkMonitor
+        self.networkMonitor.startMonitoring()
     }
     
     func onSearchTextChanged(_ query: String) async {
@@ -41,6 +44,11 @@ final class StockSearchViewModel: ObservableObject {
             searchResult = []
             viewState = .idle
             return
+        }
+        
+        if networkMonitor.isConnected == false {
+            viewState = .loadedWithError(description: "No Internet Connection", message: "Please, check your internet connection and try again.")
+            // do not return and proceed with search request, if internet re appears before request timeout will execute
         }
         
         viewState = .loading
@@ -58,5 +66,9 @@ final class StockSearchViewModel: ObservableObject {
             searchResult = []
             viewState = .loadedWithError(description: failure.errorDescription, message: failure.recoverySuggestion)
         }
+    }
+    
+    deinit {
+        self.networkMonitor.stopMonitoring()
     }
 }

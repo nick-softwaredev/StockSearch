@@ -8,30 +8,31 @@
 import Network
 import Combine
 
-protocol NetworkMonitoring: AnyObject {
-    var connectionStatusSubject: AnyPublisher<Bool, Never> { get }
+protocol NetworkMonitoringProtocol: AnyObject {
     var isConnected: Bool { get }
     func startMonitoring()
     func stopMonitoring()
 }
 
-//final class MockConnectedNetworkMonitor: NetworkMonitoring {
-//    
-//}
+final class MockNetworkMonitorConnected: NetworkMonitoringProtocol {
+    var isConnected: Bool { return true }
+    private(set) var isMonitoring: Bool = false
+    func startMonitoring() {
+        isMonitoring = true
+    }
+    func stopMonitoring() {
+        isMonitoring = false
+    }
+}
 
-final class NetworkMonitor: NetworkMonitoring {
+final class NetworkMonitor: NetworkMonitoringProtocol {
     private let monitor = NWPathMonitor()
     private let queue = DispatchQueue(label: "NetworkMonitorQueue")
     private(set) var isConnected: Bool = true
-    private let connectionStatusPublisher = PassthroughSubject<Bool, Never>()
-    var connectionStatusSubject: AnyPublisher<Bool, Never> {
-        connectionStatusPublisher.eraseToAnyPublisher()
-    }
 
     func startMonitoring() {
         monitor.pathUpdateHandler = { [weak self] path in
             self?.isConnected = path.status == .satisfied
-            self?.connectionStatusPublisher.send(path.status == .satisfied)
         }
         monitor.start(queue: queue)
     }

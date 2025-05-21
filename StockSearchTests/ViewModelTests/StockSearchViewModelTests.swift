@@ -16,7 +16,8 @@ struct StockSearchViewModelTests {
         let vm = await MainActor.run {
             StockSearchViewModel(
                 searchUseCase: MockEmptyStockSearchUseCase(),
-                debouncer: InstantDebouncerMock()
+                debouncer: InstantDebouncerMock(),
+                networkMonitor: MockNetworkMonitorConnected()
             )
         }
         
@@ -35,7 +36,8 @@ struct StockSearchViewModelTests {
         let vm =
         StockSearchViewModel(
             searchUseCase: MockSuccessStockSearchUseCase(expectedResult: expectedResult),
-            debouncer: InstantDebouncerMock()
+            debouncer: InstantDebouncerMock(),
+            networkMonitor: MockNetworkMonitorConnected()
         )
         
         
@@ -54,7 +56,8 @@ struct StockSearchViewModelTests {
         let vm = await MainActor.run {
             StockSearchViewModel(
                 searchUseCase: MockEmptyStockSearchUseCase(),
-                debouncer: InstantDebouncerMock()
+                debouncer: InstantDebouncerMock(),
+                networkMonitor: MockNetworkMonitorConnected()
             )
         }
         
@@ -73,7 +76,8 @@ struct StockSearchViewModelTests {
         let vm = await MainActor.run {
             StockSearchViewModel(
                 searchUseCase: MockFailureStockSearchUseCase(),
-                debouncer: InstantDebouncerMock()
+                debouncer: InstantDebouncerMock(),
+                networkMonitor: MockNetworkMonitorConnected()
             )
         }
         

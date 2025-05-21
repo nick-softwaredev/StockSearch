@@ -18,6 +18,9 @@ extension Resolver: @retroactive ResolverRegistering {
         register { StockAPIClient() as StockAPIClientProtocol }
             .scope(.application)
         
+        register { NetworkMonitor() as NetworkMonitoringProtocol }
+            .scope(.application)
+        
         register { StockRemoteDataService(sessionClient: resolve()) as StockRemoteDataServiceProtocol }
             .scope(.application)
         

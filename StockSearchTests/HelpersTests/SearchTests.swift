@@ -68,7 +68,7 @@ struct StockSearchHelperTests {
         #expect(result.count == 5)
     }
     
-    @Test("This test tests search with 1_00_000 items")
+    @Test("This test tests search with 1_000_000 items to search")
     func searchPerformanceOnLargeDataset() async {
         let largeDataset = generateFakeStocks(count: 1_000_000)
         let start = CFAbsoluteTimeGetCurrent()
