@@ -12,10 +12,15 @@ protocol StockSearchUseCaseProtocol {
     func searchForStockTicker(query: String) async -> Result<[Stock], StockSearchUseCaseError>
 }
 
-enum StockSearchUseCaseError: Error {
+enum StockSearchUseCaseError: LocalizedError {
     case network
-    var userMessage: String {
-        return "todo error"
+    
+    var errorDescription: String {
+        return "Search failed"
+    }
+    
+    var recoverySuggestion: String {
+        return "Please, try again"
     }
 }
 

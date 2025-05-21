@@ -11,7 +11,7 @@ import Resolver
 struct RootView: View {
     var body: some View {
         NavigationStack {
-            StockSearchView(viewModel: Resolver.resolve(StockSearchViewModel.self))
+            StockSearchView(viewModel: StockSearchViewModel(searchUseCase: Resolver.resolve(), debouncer:  Resolver.resolve())) //Resolver.resolve(StockSearchViewModel.self))
         }
     }
 }

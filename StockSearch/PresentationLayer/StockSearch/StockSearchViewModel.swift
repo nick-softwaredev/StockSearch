@@ -8,6 +8,7 @@
 import SwiftUI
 import Resolver
 
+@MainActor
 final class StockSearchViewModel: ObservableObject {
     enum ViewState: Equatable {
         case idle
@@ -33,13 +34,6 @@ final class StockSearchViewModel: ObservableObject {
 
     @MainActor
     func onSearchTextChanged(_ query: String) async {
-        print("did receive input for \(query)")
-        if query.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-            self.searchResult = []
-            viewState = .idle
-            return
-        }
-
         await debouncer.debounce {
              await self.search(query: query)
          }
@@ -47,6 +41,13 @@ final class StockSearchViewModel: ObservableObject {
 
     @MainActor
     func search(query: String) async {
+        if query.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            searchTask?.cancel()
+            self.searchResult = []
+            viewState = .idle
+            return
+        }
+        
         searchTask?.cancel()
 
         searchTask = Task {
@@ -62,7 +63,7 @@ final class StockSearchViewModel: ObservableObject {
                 viewState = searchResult.isEmpty ? .loadedWithNoResult(query: query) : .loadedWithResult
                 self.searchResult = searchResult
             case .failure(let failure):
-                viewState = .loadedWithError(message: failure.userMessage)
+                viewState = .loadedWithError(message: failure.errorDescription)
                 self.searchResult = []
             }
         }

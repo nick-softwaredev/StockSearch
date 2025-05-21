@@ -5,7 +5,7 @@
 //  Created by Nick Nick  on 5/20/25.
 //
 
-/// Merger protocol, conform to create various implementations with different algorhitm
+///  Merger protocol, conform to create various implementations with different algorhitm
 protocol StockResponseMergerProtocol {
     func merge(response: (current: StockDataResponse, historical: StockDataResponse)) -> [Stock]
 }
