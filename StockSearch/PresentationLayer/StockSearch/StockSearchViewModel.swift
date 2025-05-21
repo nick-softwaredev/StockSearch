@@ -13,11 +13,12 @@ final class StockSearchViewModel: ObservableObject {
     enum ViewState: Equatable {
         case idle
         case loading
-        case loadedWithResult([Stock])
+        case loadedWithResult
         case loadedWithNoResult(query: String)
         case loadedWithError(description: String, message: String)
     }
     
+    @Published var searchResult: [Stock] = []
     @Published var viewState: ViewState = .idle
     @Published var searchText: String = ""
     
@@ -37,6 +38,7 @@ final class StockSearchViewModel: ObservableObject {
     
     func search(query: String) async {
         if query.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            searchResult = []
             viewState = .idle
             return
         }
@@ -44,16 +46,16 @@ final class StockSearchViewModel: ObservableObject {
         viewState = .loading
         let result = await searchUseCase.searchForStockTicker(query: query)
         
-        
         switch result {
         case .success(let searchResult):
-            viewState = searchResult.isEmpty ? .loadedWithNoResult(query: query) : .loadedWithResult(searchResult)
+            self.searchResult = searchResult
+            viewState = searchResult.isEmpty ? .loadedWithNoResult(query: query) : .loadedWithResult
         case .failure(let failure):
             if failure == .cancelled {
                 // error stating that previous search operation cancelled, do not display to end user.
                 return
             }
-            
+            searchResult = []
             viewState = .loadedWithError(description: failure.errorDescription, message: failure.recoverySuggestion)
         }
     }

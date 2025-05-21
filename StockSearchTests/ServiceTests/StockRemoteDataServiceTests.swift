@@ -18,13 +18,14 @@ struct StockRemoteDataServiceTests {
         let historical = StockDataResponse(stocks: [
             StockDataEntry(id: 2, name: "Apple", ticker: "AAPL", currentPrice: 210)
         ])
-        let mock = MockStockRemoteDataService(result: .success(current))
+        let mock = MockStockRemoteDataService(resultCurrent: .success(current), resultHistoric: .success(historical))
 
-        let result = try await mock.loadData(query: "AAPL")
+        let resultCurrent = try await mock.loadCurrentDataFor(query: "AAPL")
+        let resultHistoric = try await mock.loadCurrentDataFor(query: "AAPL")
 
-        #expect(result.current.stocks.count == 1)
-        #expect(result.historical.stocks.count == 1)
-        #expect(result.current.stocks.first?.currentPrice == 190)
+        #expect(resultCurrent.stocks.count == 1)
+        #expect(resultHistoric.stocks.count == 1)
+        #expect(resultCurrent.stocks.first?.currentPrice == 190)
     }
 
     @Test("Throws error when underlying service fails")
@@ -33,10 +34,10 @@ struct StockRemoteDataServiceTests {
             case testFailure
         }
         
-        let mock = MockStockRemoteDataService(result: .failure(MockError.testFailure))
+        let mock = MockStockRemoteDataService(resultCurrent: .failure(MockError.testFailure), resultHistoric: .failure(MockError.testFailure))
 
         do {
-            _ = try await mock.loadData(query: "AAPL")
+            _ = try await mock.loadCurrentDataFor(query: "AAPL")
             #expect(Bool(false), "Expected to throw error but succeeded")
         } catch {
             #expect(true, "Caught expected error")

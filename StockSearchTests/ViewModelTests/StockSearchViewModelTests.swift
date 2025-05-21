@@ -23,6 +23,7 @@ struct StockSearchViewModelTests {
         await vm.onSearchTextChanged("   ")
         
         #expect(vm.viewState == .idle, "Expected viewState to be .idle for empty query")
+        #expect(vm.searchResult.isEmpty, "Expected searchResult to be empty")
     }
     
     @MainActor @Test("ViewModel sets state to .loadedWithResult and updates results on successful search")
@@ -40,9 +41,9 @@ struct StockSearchViewModelTests {
         
         await vm.onSearchTextChanged("AAPL")
         
-        if case .loadedWithResult(let result) = vm.viewState {
-            #expect(result.count == expectedResult.count, "Expected one result")
-            #expect(result.first?.ticker == expectedResult.first?.ticker, "Expected result ticker to be AAPL")
+        if case .loadedWithResult = vm.viewState {
+            #expect(vm.searchResult.count == expectedResult.count, "Expected one result")
+            #expect(vm.searchResult.first?.ticker == expectedResult.first?.ticker, "Expected result ticker to be AAPL")
         } else {
             #expect(Bool(false), "Expected .loadedWithResult state")
         }
@@ -63,6 +64,7 @@ struct StockSearchViewModelTests {
             return #expect(Bool(false), "Expected viewState to be .loadedWithNoResult")
         }
         
+        #expect(vm.searchResult.isEmpty, "Expected searchResult to be empty")
         #expect(query == "XYZ", "Expected query to be carried into state")
     }
     
@@ -77,10 +79,10 @@ struct StockSearchViewModelTests {
         
         await vm.onSearchTextChanged("AAPL")
         
-        guard case let .loadedWithError(message) = vm.viewState else {
+        guard case let .loadedWithError(description, recoverySuggestion) = vm.viewState else {
             return #expect(Bool(false), "Expected viewState to be .loadedWithError")
         }
         
-        #expect(message == "Search failed", "Expected correct error message")
+        #expect(description == "Search failed", "Expected correct error message")
     }
 }

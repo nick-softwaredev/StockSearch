@@ -11,12 +11,19 @@ struct StockSearchView: View {
     @StateObject var viewModel: StockSearchViewModel
 
     var body: some View {
-        VStack {
+        ZStack {
+            StockSearchViewList(stocks: viewModel.searchResult)
             switch viewModel.viewState {
-            case .loadedWithResult(let searchResult):
-                StockSearchViewList(stocks: searchResult)
-            default:
-                StockSearchViewListOverlay(viewState: viewModel.viewState)
+            case .idle:
+                EmptyView()
+            case .loading:
+                EmptyView()
+            case .loadedWithResult:
+                EmptyView()
+            case .loadedWithNoResult(let query):
+                StockSearchViewListOverlay(message: .custom("No results for '\(query)'"))
+            case .loadedWithError(let description, let message):
+                StockSearchViewListOverlay(message: .error(description: description, suggestion: message))
             }
         }
         .navigationTitle("Search Stocks")
