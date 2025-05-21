@@ -46,7 +46,7 @@ Searching done over name and ticker based on query and utilizes lazy array with 
 
 ## UX, UI updates and rendering  
 
-The search action utilizes denounce to prevent unneeded requests as well as handles search cancellation task to optimize rendering. The views are split in subviews to help manage and build flows. As this app follows iOS Stock App UX, there is no search loader present but rather request timeout is set to be expiring fast giving user view state explaining the result of action / error communication. Edge cases like empty searches ignoring and no internet connection as supported during user input.
+The search action utilizes denounce to prevent unneeded requests as well as handles search cancellation task to optimize rendering. The views are split in subviews to help manage and build flows. As this app follows iOS Stock App UX, there is no search loader present but rather request timeout is set to be expiring fast giving user view state explaining the result of action / error communication. Edge cases like empty searches ignoring and no internet connection is supported during user input.
 
 The design is very simple resembling design of Stocks app with minor adjustment and hig in mind. 
 
