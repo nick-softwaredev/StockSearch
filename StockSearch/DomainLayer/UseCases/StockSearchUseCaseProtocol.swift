@@ -32,7 +32,7 @@ struct StockSearchUseCase: StockSearchUseCaseProtocol {
             let searchResult = Array(
                 result
                     .lazy
-                    .filter { ($0.name+$0.ticker).contains(query.lowercased()) }
+                    .filter { ($0.name + " " + $0.ticker).lowercased().contains(query.lowercased()) }
                     .prefix(10)
             )
             return .success(searchResult)

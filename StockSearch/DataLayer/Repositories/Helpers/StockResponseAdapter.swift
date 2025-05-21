@@ -1,16 +1,18 @@
 //
-//  StockReponseAdapter.swift
+//  StockResponseAdapter.swift
 //  StockSearch
 //
 //  Created by Nick Nick  on 5/20/25.
 //
 
-protocol StockResponseAdapterProtocol {
-    func adapt(response: (current: StockDataResponse, historical: StockDataResponse)) -> [Stock]
+/// Merger protocol, conform to create various implementations with different algorhitm
+protocol StockResponseMergerProtocol {
+    func merge(response: (current: StockDataResponse, historical: StockDataResponse)) -> [Stock]
 }
 
-struct StockResponseAdapter: StockResponseAdapterProtocol {
-    func adapt(response: (current: StockDataResponse, historical: StockDataResponse)) -> [Stock] {
+struct StockResponseMerger: StockResponseMergerProtocol {
+    /// Merges two datasets into new single array. Total complexity for this function is O(n + m), perfect for unsorted datasets utilizing has map (dictionary)  and avoiding nested loops
+    func merge(response: (current: StockDataResponse, historical: StockDataResponse)) -> [Stock] {
         let allEntries = response.current.stocks + response.historical.stocks
 
         let grouped = Dictionary(grouping: allEntries, by: \.ticker)
@@ -30,6 +32,6 @@ struct StockResponseAdapter: StockResponseAdapterProtocol {
             }
         }
 
-        return mergedStocks.sorted { $0.name < $1.name }
+        return mergedStocks
     }
 }
