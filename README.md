@@ -58,4 +58,7 @@ To run tests, simply CMND+U or run manually desired tests from test target files
 
 ## 🚀 3rd party Dependancies  
 
-The only dependancy used in the app is Resolver(https://github.com/hmlongco/Resolver), it greatly helps with dependency injection, gives centralized management for it and prevents boiler plate code. It is utilized in app, but can also be used or integration tests with ease. 
+The only dependency used in the app is Resolver(https://github.com/hmlongco/Resolver), it greatly helps with dependency injection, gives centralized management for it and prevents boiler plate code. It is utilized in app, but can also be used or integration tests with ease. 
+
+## Reflection 
+If valid backend communication would be present, I would probably be able to cache save the response for the searches or preffered user stocks and only render / update the price value on the view coming from something like socket connection and have placeholders for price like Stocks App, that would remove need for on device merging from 2 sources. I would also be able to utilize partial loads from backend thus most likely would not need to rely on my on device search that much. Also, in real app I would cover app with some potential integration tests as well as add analytics tools to record performance as well as implement remote configs to support dynamic view composition or many other things. The current app structure also allows me to use this as standalone module and expose protocols or shared module helpers and objects to be able to work on there features isolated and standalone.
