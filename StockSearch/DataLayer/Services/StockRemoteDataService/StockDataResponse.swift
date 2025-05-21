@@ -11,7 +11,7 @@ struct StockDataResponse: Decodable {
     let stocks: [StockDataEntry]
 }
 
-struct StockDataEntry: Decodable {
+struct StockDataEntry: Decodable, Equatable {
     let id: Int
     let name: String
     let ticker: String

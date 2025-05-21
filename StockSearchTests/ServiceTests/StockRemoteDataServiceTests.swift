@@ -18,7 +18,7 @@ struct StockRemoteDataServiceTests {
         let historical = StockDataResponse(stocks: [
             StockDataEntry(id: 2, name: "Apple", ticker: "AAPL", currentPrice: 210)
         ])
-        let mock = MockStockRemoteDataService(result: .success((current: current, historical: historical)))
+        let mock = MockStockRemoteDataService(result: .success(current))
 
         let result = try await mock.loadData(query: "AAPL")
 

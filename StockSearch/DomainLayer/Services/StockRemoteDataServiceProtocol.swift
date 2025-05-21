@@ -8,5 +8,6 @@
 import Foundation
 
 protocol StockRemoteDataServiceProtocol {
-    func loadData(query: String) async throws -> (current: StockDataResponse, historical: StockDataResponse)
+    func loadCurrentDataFor(query: String) async throws -> StockDataResponse
+    func loadHistoricDataFor(query: String) async throws -> StockDataResponse
 }

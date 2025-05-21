@@ -50,6 +50,7 @@ final class StockSearchViewModel: ObservableObject {
             viewState = searchResult.isEmpty ? .loadedWithNoResult(query: query) : .loadedWithResult(searchResult)
         case .failure(let failure):
             if failure == .cancelled {
+                // error stating that previous search operation cancelled, do not display to end user.
                 return
             }
             

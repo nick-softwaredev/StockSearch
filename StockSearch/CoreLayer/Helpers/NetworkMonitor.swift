@@ -15,6 +15,10 @@ protocol NetworkMonitoring: AnyObject {
     func stopMonitoring()
 }
 
+//final class MockConnectedNetworkMonitor: NetworkMonitoring {
+//    
+//}
+
 final class NetworkMonitor: NetworkMonitoring {
     private let monitor = NWPathMonitor()
     private let queue = DispatchQueue(label: "NetworkMonitorQueue")

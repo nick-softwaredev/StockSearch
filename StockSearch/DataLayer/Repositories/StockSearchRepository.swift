@@ -8,24 +8,30 @@
 import Foundation
 import Resolver
 
-// TODO: add cache service
-protocol StockSearchCacheProtocol {
-    func cache()
-    func reset()
-    func isEmpty()
-    func search(query: String) -> [Stock]
-}
-//
 
 struct StockSearchRepository: StockSearchRepositoryProtocol {
-    // TODO: add cache service
     @Injected private var remoteDatabaseService: StockRemoteDataServiceProtocol
     @Injected private var responseAdapter: StockResponseMergerProtocol
+    @Injected private var localDatabaseService: StockLocalDataServiceProtocol
 
     func getSearchableDataFor(query: String) async throws -> ([Stock]) {
-        let (currentData, historicData) = try await remoteDatabaseService.loadData(query: query)
-        let stocksAdaptedResponse = responseAdapter.merge(response: (currentData, historicData))
+        async let currentData = remoteDatabaseService.loadCurrentDataFor(query: query)
 
-        return stocksAdaptedResponse
+        let historicData: [StockDataEntry]
+        
+        // fetch historic data once and use cached version instead for further data requests
+        if let cached = localDatabaseService.getCachedData() {
+            historicData = cached
+        } else {
+            let fetched = try await remoteDatabaseService.loadHistoricDataFor(query: query)
+            historicData = fetched.stocks
+            localDatabaseService.setCache(historicData)
+        }
+
+        let mergedResponse = responseAdapter.merge(
+            response: (try await currentData, StockDataResponse(stocks: historicData))
+        )
+
+        return mergedResponse
     }
 }

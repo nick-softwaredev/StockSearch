@@ -13,11 +13,12 @@ struct StockRemoteDataService: StockRemoteDataServiceProtocol {
     init(sessionClient: StockAPIClientProtocol) {
         self.sessionClient = sessionClient
     }
-
-    func loadData(query: String) async throws -> (current: StockDataResponse, historical: StockDataResponse) {
-        async let historicalData = sessionClient.fetch(StockDataResponse.self, from: .historical(query), timeoutInterval: 10)
-        async let currentData = sessionClient.fetch(StockDataResponse.self, from: .current(query), timeoutInterval: 10)
-
-        return (current: try await currentData, historical: try await historicalData)
+    
+    func loadCurrentDataFor(query: String) async throws -> StockDataResponse {
+        try await sessionClient.fetch(StockDataResponse.self, from: .current(query), timeoutInterval: 10)
+    }
+    
+    func loadHistoricDataFor(query: String) async throws -> StockDataResponse {
+        try await sessionClient.fetch(StockDataResponse.self, from: .historical(query), timeoutInterval: 10)
     }
 }

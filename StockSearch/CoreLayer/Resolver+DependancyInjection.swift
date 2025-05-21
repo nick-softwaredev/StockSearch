@@ -21,6 +21,9 @@ extension Resolver: @retroactive ResolverRegistering {
         register { StockRemoteDataService(sessionClient: resolve()) as StockRemoteDataServiceProtocol }
             .scope(.application)
         
+        register { StockLocalDataService() as StockLocalDataServiceProtocol }
+            .scope(.application)
+        
         register { StockResponseMerger() as StockResponseMergerProtocol }
             .scope(.application)
         

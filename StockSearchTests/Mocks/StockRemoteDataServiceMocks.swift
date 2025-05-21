@@ -8,9 +8,16 @@
 @testable import StockSearch
 
 struct MockStockRemoteDataService: StockRemoteDataServiceProtocol {
-    var result: Result<(current: StockDataResponse, historical: StockDataResponse), Error>
-
-    func loadData(query: String) async throws -> (current: StockDataResponse, historical: StockDataResponse) {
+    var result: Result<StockDataResponse, Error>
+    
+    func loadCurrentDataFor(query: String) async throws -> StockSearch.StockDataResponse {
+        switch result {
+        case .success(let data): return data
+        case .failure(let error): throw error
+        }
+    }
+    
+    func loadHistoricDataFor(query: String) async throws -> StockSearch.StockDataResponse {
         switch result {
         case .success(let data): return data
         case .failure(let error): throw error
