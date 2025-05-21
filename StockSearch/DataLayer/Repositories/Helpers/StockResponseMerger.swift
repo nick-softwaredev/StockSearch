@@ -7,12 +7,12 @@
 
 ///  Merger protocol, conform to create various implementations with different algorhitm
 protocol StockResponseMergerProtocol {
-    func merge(response: (current: StockDataResponse, historical: StockDataResponse)) -> [Stock]
+    static func merge(response: (current: StockDataResponse, historical: StockDataResponse)) -> [Stock]
 }
 
-struct StockResponseMerger: StockResponseMergerProtocol {
+enum StockResponseMerger: StockResponseMergerProtocol {
     /// Merges two datasets into new single array. Total complexity for this function is O(n + m), perfect for unsorted datasets utilizing has map (dictionary)
-    func merge(response: (current: StockDataResponse, historical: StockDataResponse)) -> [Stock] {
+    static func merge(response: (current: StockDataResponse, historical: StockDataResponse)) -> [Stock] {
         let allEntries = response.current.stocks + response.historical.stocks
 
         let grouped = Dictionary(grouping: allEntries, by: \.ticker)

@@ -24,9 +24,6 @@ extension Resolver: @retroactive ResolverRegistering {
         register { StockLocalDataService() as StockLocalDataServiceProtocol }
             .scope(.application)
         
-        register { StockResponseMerger() as StockResponseMergerProtocol }
-            .scope(.application)
-        
         register { StockSearchRepository() as StockSearchRepositoryProtocol }
             .scope(.application)
         

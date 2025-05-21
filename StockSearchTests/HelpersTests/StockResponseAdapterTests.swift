@@ -10,8 +10,6 @@ import Testing
 
 @Suite
 struct StockResponseMergerTests {
-    let adapter = StockResponseMerger()
-
     @Test("Merges and averages prices correctly, sorted by name")
     func mergesAndSortsStocksCorrectly() {
         let current = StockDataResponse(stocks: [
@@ -23,7 +21,7 @@ struct StockResponseMergerTests {
             StockDataEntry(id: 4, name: "Tesla", ticker: "TSLA", currentPrice: 720)
         ])
 
-        let result = adapter.merge(response: (current: current, historical: historical))
+        let result = StockResponseMerger.merge(response: (current: current, historical: historical))
 
         #expect(result.count == 2)
         #expect(result[0].name == "Apple")
@@ -34,7 +32,7 @@ struct StockResponseMergerTests {
 
     @Test("Returns empty list for empty responses")
     func emptyResponsesReturnEmptyList() {
-        let result = adapter.merge(response: (
+        let result = StockResponseMerger.merge(response: (
             current: StockDataResponse(stocks: []),
             historical: StockDataResponse(stocks: [])
         ))
@@ -44,7 +42,7 @@ struct StockResponseMergerTests {
 
     @Test("Adapts correctly with only one source (current)")
     func adaptsWithOnlyOneSource() {
-        let result = adapter.merge(response: (
+        let result = StockResponseMerger.merge(response: (
             current: StockDataResponse(stocks: [
                 StockDataEntry(id: 1, name: "Netflix", ticker: "NFLX", currentPrice: 350)
             ]),

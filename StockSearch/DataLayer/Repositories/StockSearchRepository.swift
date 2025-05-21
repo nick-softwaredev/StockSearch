@@ -11,7 +11,6 @@ import Resolver
 
 struct StockSearchRepository: StockSearchRepositoryProtocol {
     @Injected private var remoteDatabaseService: StockRemoteDataServiceProtocol
-    @Injected private var responseAdapter: StockResponseMergerProtocol
     @Injected private var localDatabaseService: StockLocalDataServiceProtocol
 
     func getSearchableDataFor(query: String) async throws -> ([Stock]) {
@@ -28,7 +27,7 @@ struct StockSearchRepository: StockSearchRepositoryProtocol {
             localDatabaseService.setCache(historicData)
         }
 
-        let mergedResponse = responseAdapter.merge(
+        let mergedResponse = StockResponseMerger.merge(
             response: (try await currentData, StockDataResponse(stocks: historicData))
         )
 
