@@ -1,4 +1,4 @@
-# 📱 ProjectName
+# 📱 StockSearch
 
 An iOS application that allows users to search stocks in realtime time and viewing average and current price 
 
