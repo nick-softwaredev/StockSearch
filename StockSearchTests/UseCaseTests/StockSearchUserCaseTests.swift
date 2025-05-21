@@ -14,7 +14,7 @@ struct StockSearchUseCaseTests {
     func testSuccessSearchReturnsStock() async {
         let resultLimit = 10
         let expectedResult = ([
-            Stock(id: 1, name: "Apple Inc.", ticker: "AAPL", averagePrice: 190.2)
+            Stock(id: 1, name: "Apple Inc.", ticker: "AAPL", currentPrice: 190, averagePrice: 190.2)
         ])
         
         let useCase = MockSuccessStockSearchUseCase(expectedResult: expectedResult)

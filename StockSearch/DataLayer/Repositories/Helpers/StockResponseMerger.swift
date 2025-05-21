@@ -19,7 +19,7 @@ struct StockResponseMerger: StockResponseMergerProtocol {
 
         let mergedStocks: [Stock] = grouped.compactMap { (ticker, entries) in
             if let first = entries.first {
-                let averagePrice = entries.map(\.currentPrice).reduce(0, +) / Double(entries.count)
+                let averagePrice = entries.map(\.currentPrice).reduce(0, +) / Double(entries.count).rounded(toPlaces: 2)
 
                 return Stock(
                     id: first.id,

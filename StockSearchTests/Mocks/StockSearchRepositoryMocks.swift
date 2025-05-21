@@ -10,8 +10,8 @@
 struct MockStockSearchRepositorySuccess: StockSearchRepositoryProtocol {
     func getSearchableDataFor(query: String) async throws -> [Stock] {
         return [
-            Stock(id: 1, name: "Apple Inc.", ticker: "AAPL", averagePrice: 190.2),
-            Stock(id: 2, name: "Tesla Inc.", ticker: "TSLA", averagePrice: 215.3)
+            Stock(id: 1, name: "Apple Inc.", ticker: "AAPL", currentPrice: 200, averagePrice: 190.2),
+            Stock(id: 2, name: "Tesla Inc.", ticker: "TSLA", currentPrice: 199, averagePrice: 215.3)
         ]
     }
 }

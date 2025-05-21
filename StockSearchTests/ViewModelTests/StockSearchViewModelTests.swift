@@ -29,7 +29,7 @@ struct StockSearchViewModelTests {
     @MainActor @Test("ViewModel sets state to .loadedWithResult and updates results on successful search")
     func successfulSearchSetsLoadedWithResult() async {
         let expectedResult = ([
-            Stock(id: 1, name: "Apple Inc.", ticker: "AAPL", averagePrice: 190.2)
+            Stock(id: 1, name: "Apple Inc.", ticker: "AAPL", currentPrice: 190, averagePrice: 190.2)
         ])
         
         let vm =

@@ -49,13 +49,7 @@ struct StockSearchUseCase: StockSearchUseCaseProtocol {
 
         do {
             let result = try await repository.getSearchableDataFor(query: query)
-            let searchResult = Array(
-                result
-                    .lazy
-                    .filter { ($0.name + " " + $0.ticker).lowercased().contains(query.lowercased()) }
-                    .prefix(10)
-            )
-            return .success(searchResult)
+            return .success(StockSearchHelper.search(query: query, mergedStockData: result, resultLimit: resultLimit))
         } catch let error as URLError where error.code == .cancelled {
             print("Request cancelled:")
             return .failure(.cancelled)
@@ -72,15 +66,5 @@ struct StockSearchUseCase: StockSearchUseCaseProtocol {
             print("Unknown error: \(error)")
             return .failure(.unknown)
         }
-    }
-    
-    /// this unction
-    private func searchStocksWith(query: String, mergedStockData: [Stock], resultLimit: Int = 10) -> [Stock] {
-        return Array(
-            mergedStockData
-                .lazy
-                .filter { ($0.name + " " + $0.ticker).lowercased().contains(query.lowercased()) }
-                .prefix(resultLimit)
-        )
     }
 }
