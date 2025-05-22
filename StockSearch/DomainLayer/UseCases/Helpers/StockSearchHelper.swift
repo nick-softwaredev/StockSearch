@@ -46,13 +46,12 @@ enum StockSearchHelper {
                                $0.ticker.lowercased().hasPrefix(normalizedQuery)
                     }
                 }
+                .prefix(resultLimit)
                 .sorted {
                     sortedByTicker
                     ? ($0.ticker.lowercased(), $0.name.lowercased()) < ($1.ticker.lowercased(), $1.name.lowercased())
                     : ($0.name.lowercased(), $0.ticker.lowercased()) < ($1.name.lowercased(), $1.ticker.lowercased())
                 }
-                .prefix(resultLimit)
-                .prefix(resultLimit)
         )
     }
 }
