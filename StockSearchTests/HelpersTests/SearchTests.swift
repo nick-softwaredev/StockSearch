@@ -70,7 +70,11 @@ struct StockSearchHelperTests {
     
     @Test("This test tests search with 1_000_000 items to search")
     func searchPerformanceOnLargeDataset() async {
-        let largeDataset = generateFakeStocks(count: 10_000_000)
+        let size = 1_000_000
+        let largeDataset = generateFakeStocks(count: size)
+        
+        #expect(largeDataset.count == size) // threshold to assert speed
+        
         let start = CFAbsoluteTimeGetCurrent()
         
         _ = StockSearchHelper.search(query: "ap", mergedStockData: largeDataset, resultLimit: 10)
@@ -78,6 +82,6 @@ struct StockSearchHelperTests {
         let duration = CFAbsoluteTimeGetCurrent() - start
         print("⏱️ Search took \(duration) seconds")
         
-        #expect(duration < 0.1) // threshold to assert speed
+        #expect(duration < 0.01) // threshold to assert speed
     }
 }
