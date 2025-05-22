@@ -1,4 +1,4 @@
-# 📱 ProjectName
+# 📱 StockSearch
 
 An iOS application that allows users to search stocks in realtime time and viewing average and current price 
 
@@ -46,7 +46,7 @@ Searching done over name and ticker based on query and utilizes lazy array with 
 
 ## UX, UI updates and rendering  
 
-The search action utilizes denounce to prevent unneeded requests as well as handles search cancellation task to optimize rendering. The views are split in subviews to help manage and build flows. As this app follows iOS Stock App UX, there is no search loader present but rather request timeout is set to be expiring fast giving user view state explaining the result of action / error communication. Edge cases like empty searches ignoring and no internet connection as supported during user input.
+The search action utilizes denounce to prevent unneeded requests as well as handles search cancellation task to optimize rendering. The views are split in subviews to help manage and build flows. As this app follows iOS Stock App UX, there is no search loader present but rather request timeout is set to be expiring fast giving user view state explaining the result of action / error communication. Edge cases like empty searches ignoring and no internet connection is supported during user input.
 
 The design is very simple resembling design of Stocks app with minor adjustment and hig in mind. 
 
@@ -58,7 +58,11 @@ To run tests, simply CMND+U or run manually desired tests from test target files
 
 ## 🚀 3rd party Dependancies  
 
-The only dependency used in the app is Resolver(https://github.com/hmlongco/Resolver), it greatly helps with dependency injection, gives centralized management for it and prevents boiler plate code. It is utilized in app, but can also be used or integration tests with ease. 
+The only dependency used in the app is Resolver(https://github.com/hmlongco/Resolver)
+
+It greatly helps with dependency injection, gives centralized management and prevents boiler plate code. It is utilized in app, but can also be used for integration tests with ease. 
 
 ## Reflection 
-If valid backend communication would be present, I would probably be able to cache save the response for the searches or preffered user stocks and only render / update the price value on the view coming from something like socket connection and have placeholders for price like Stocks App, that would remove need for on device merging from 2 sources. I would also be able to utilize partial loads from backend thus most likely would not need to rely on my on device search that much. Also, in real app I would cover app with some potential integration tests as well as add analytics tools to record performance as well as implement remote configs to support dynamic view composition or many other things. The current app structure also allows me to use this as standalone module and expose protocols or shared module helpers and objects to be able to work on there features isolated and standalone.
+If valid backend communication would be present, I would probably be able to cache save the response for the searches or preffered user stocks and only render / update the price value on the view coming from something like socket connection and have placeholders for price like Stocks App, that would remove need for on device merging from 2 sources. I would also be able to utilize partial loads from backend thus most likely would not need to rely on my on device search that much. Also, in real app I would cover app with some potential integration tests as well as add analytics tools to record performance as well as implement remote configs to support dynamic view composition or many other things. The current app structure also allows me to use this as standalone module and expose protocols or shared module helpers and objects to be able to work on there features isolated and standalone. Final minor change id might consider supporting is adding observation for network state globally across app and introduce dynamic monitoring rather as only during seach type.
+
+For testing, i would add integration tests as well general ui test for common flows. 
